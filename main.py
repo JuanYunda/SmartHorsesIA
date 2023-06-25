@@ -1,15 +1,17 @@
+#Proyecto SmartHorseIA
+#Elaborado por:
+#Mauricio Carrillo - 2024092
+#Juan Esteban Mazuera - 2043008
+#Sheilly Ortega - 2040051
+
 import tkinter as tk
 import easygui
 import time
 from PIL import Image, ImageTk
 import easygui as eg
 import numpy as np
+from horse import Horse
 
-#ProyectoGokuAI
-#Elaborado por:
-#Mauricio Carrillo - 2024092
-#Juan Esteban Mazuera - 2043008
-#Sheilly Ortega - 2040051
 
 botones = None
 flag = True
@@ -74,18 +76,40 @@ def cargar_mapa():
 def cerrar_programa():
     ventana.destroy()
 
-# Función para cambiar el valor de la variable booleana que indica si se seleccionó busqueda informada o no informada
+# Función para cambiar la dificultad del juego
 def cambiar_variable(valor):
-    global tipo_busqueda
-    tipo_busqueda = valor
+    global dificultad
+    global profundidadMaxima
+    global minimo
+    global maximo 
+    dificultad = valor
+    if dificultad == 1:
+        profundidadMaxima = 3
+    elif dificultad == 2:
+        profundidadMaxima = 5
+    elif dificultad == 3:
+        profundidadMaxima = 7
+    maximo, minimo = 1000, -1000
 
-# Función que muestra la interfaz flotante para seleccionar entre busqueda informada o no informada
+# Función que muestra la interfaz flotante para seleccionar la dificultad
 def mostrar_interfaz():
     respuesta = easygui.buttonbox("Seleccione la dificultad:", choices=["Principiante", "Amateur", "Experto"])
     if respuesta == "Principiante":
-        cambiar_variable(True)
-    else:
-        cambiar_variable(False)
+        cambiar_variable(1)
+    elif respuesta == "Amateur":
+        cambiar_variable(2)
+    elif respuesta == "Experto":
+        cambiar_variable(3)
+
+def minimax(profundidad, nodoIndice,maximizarJugador,valores,alfa,beta):
+    if profundidad == profundidadMaxima:
+        return valores[nodoIndice]
+    
+    if maximizarJugador:
+        mejor = minimo
+        for i in range(0,8):
+            valores = minimax(profundidad + 1, nodoIndice * 2 + i,)
+    
 
 # Crear la ventana
 ventana = tk.Tk()
