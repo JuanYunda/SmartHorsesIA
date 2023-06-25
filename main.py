@@ -12,6 +12,7 @@ import easygui as eg
 import numpy as np
 from horse import Horse
 from tkinter import Button
+import random
 
 
 botones = None
@@ -201,12 +202,24 @@ solucion = []
 
 mostrar_interfaz()
 
-archivo = eg.fileopenbox(msg='Seleccione el mapa',
-                        title='Seleccion de mapa',
-                        multiple=False,
-                        )
+with open('Mapa.txt', 'w') as file:
+    numbers = list(range(10))
+    numbers.remove(0)  # Eliminar el número 0 de la lista de números disponibles
+    map_data = [[0] * 8 for _ in range(8)]  # Inicializar el mapa con ceros
+
+    for num in numbers:
+        while True:
+            row = random.randint(0, 7)
+            col = random.randint(0, 7)
+            if map_data[row][col] == 0:  # Verificar si la posición está disponible
+                map_data[row][col] = num
+                break
+
+    for row in map_data:
+        row_str = ' '.join(str(num) for num in row)
+        file.write(row_str + '\n')
      
-mapa = open(archivo, 'r')
+mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
 draw_map(canvas, matrizInicial)
