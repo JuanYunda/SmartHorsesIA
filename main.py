@@ -11,24 +11,33 @@ from PIL import Image, ImageTk
 import easygui as eg
 import numpy as np
 from horse import Horse
+from tkinter import Button
 
 
 botones = None
 flag = True
 global tipo_busqueda
 
-# Función para dibujar el mapa en la ventana
+# Funciones para dibujar el mapa en la ventana
+def button_clicked(row, col):
+    print(f"Button clicked at row={row}, col={col}")
+    # Realizar alguna acción adicional aquí según tus necesidades
+
+# Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
-    global images
-    
-    # Dibujar cada celda en el canvas con la imagen correspondiente
+
     filas = len(map_data)
     colum = len(map_data[0])
     for row_idx in range(filas):
         for col_idx in range(colum):
             x1 = col_idx * CELL_SIZE
             y1 = row_idx * CELL_SIZE
-            canvas.create_image(x1, y1, image=images[int(map_data[row_idx][col_idx])], anchor='nw')
+            button = Button(canvas, image=images[int(map_data[row_idx][col_idx])])
+            button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+            canvas.create_window(x1, y1, window=button, anchor='nw')
+
+
+            
 
 # Función que imprime la solución que retorna la función de busqueda
 def imprimir():
