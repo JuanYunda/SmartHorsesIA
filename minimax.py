@@ -214,12 +214,13 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     
     solucion = []
     utilidad = resultado.getUtilidad()
-    while resultado.getHijo() != None:
-        solucion.append(resultado.getMapa())
-        resultado = resultado.getHijo()
+    solucion.append(resultado.getHijo().getMapa())
+    #while resultado.getHijo() != None:
+     #   solucion.append(resultado.getMapa())
+      #  resultado = resultado.getHijo()
     fin = time.time()
 
-    solucion.append(mapa)
+    #solucion.append(mapa)
 
     return solucion, utilidad, fin-inicio
 
