@@ -20,9 +20,14 @@ import minimax
 botones = None
 flag = True
 global fila, columna
+global buttons
+buttons = []
+casillasTomadas = 0
+waiting_for_click = False
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
+    global waiting_for_click 
     possible_moves = [
         (fila + 2, columna + 1),
         (fila + 2, columna - 1),
@@ -37,6 +42,7 @@ def button_clicked(row, col):
     for move in possible_moves:
         if row == move[0] and col == move[1]:
             print("posicion admitida")
+            waiting_for_click = False
             return None
 
     print("posicion no admitida")
@@ -44,65 +50,75 @@ def button_clicked(row, col):
 
 # Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
-
+    global waiting_for_click 
     filas = len(map_data)
     colum = len(map_data[0])
     for row_idx in range(filas):
+        buttons.append([])
         for col_idx in range(colum):
             x1 = col_idx * CELL_SIZE
             y1 = row_idx * CELL_SIZE
-            button = Button(canvas, image=images[int(map_data[row_idx][col_idx])])
-            button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
-            canvas.create_window(x1, y1, window=button, anchor='nw')
-
-
-            
-
-# Función que imprime la solución que retorna la función de busqueda
-def imprimir():
-    # Actualizar el ciclo for para que recorra la lista de soluciones
-    for i in reversed(solucion):
-        # Definir el mapa que se desea mostrar
-        map_data = i
-
-        # Dibujar el mapa en el canvas
-        draw_map(canvas, map_data)
-        ventana.update()
-        time.sleep(0.5)
+            if int(map_data[row_idx][col_idx])==1:
+                button = Button(canvas, text='1', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==2:
+                button = Button(canvas, text='2', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==3:
+                button = Button(canvas, text='3', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==4:
+                button = Button(canvas, text='4', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==5:
+                button = Button(canvas, text='5', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==6:
+                button = Button(canvas, text='6', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==7:
+                button = Button(canvas, text='7', bg='white', padx=18, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            elif int(map_data[row_idx][col_idx])==0:
+                button = Button(canvas, text='', bg='white', padx=21, pady=13)
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1, y1, window=button, anchor='nw')
+            else:
+                button = Button(canvas, image=images[int(map_data[row_idx][col_idx])])
+                button.configure(command=lambda r=row_idx, c=col_idx: button_clicked(r, c))
+                canvas.create_window(x1-3, y1-4, window=button, anchor='nw')
+            buttons[row_idx].append(button)
     
-# Actualizar los valores de las etiquetas
-def actualizarValores(expand, prof, tiem, cost):
-    etiqueta_costo.config(text='Costo de la solución: ' + str(cost))
+    possible_moves = [
+        (fila + 2, columna + 1),
+        (fila + 2, columna - 1),
+        (fila - 2, columna + 1),
+        (fila - 2, columna - 1),
+        (fila + 1, columna + 2),
+        (fila + 1, columna - 2),
+        (fila - 1, columna + 2),
+        (fila - 1, columna - 2)
+    ]
+    for row_idx in range(filas):
+        for col_idx in range(colum):
+            for move in possible_moves:
+                if row_idx == move[0] and col_idx == move[1]:
+                    button = buttons[row_idx][col_idx]
+                    button.configure(bg='lime')
+    waiting_for_click = True
 
-#reconfigura los elementos dentro de la interfaz (funcion que sirve si se desea realizar mas de un tipo de busqueda en la misma ejecución)
-def cargar_mapa():
-    global matrizInicial
-    global solucion
-
-    mostrar_interfaz()
-
-    archivo = eg.fileopenbox(msg='Seleccione el nuevo mapa',
-                            title='Seleccion de mapa',
-                            multiple=False)
-
-
-    if archivo is not None:
-        mapa = open(archivo, 'r')
-        matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
-        mapa.close()
-
-        # Limpiar la solución anterior
-        solucion = []
-
-        # Dibujar el nuevo mapa en el lienzo
-        draw_map(canvas, matrizInicial)
-
-        # Actualizar la interfaz
-        ventana.update()
-
-#funcion asociada al boton de salir, que cierra la ventana
-def cerrar_programa():
-    ventana.destroy()
+    # Bucle de espera hasta que el usuario haga clic en un botón
+    while waiting_for_click:
+        canvas.update()  # Actualizar el lienzo para que los eventos se procesen
+        # Pausar la ejecución para permitir que otros eventos se procesen
+        canvas.after(100)  # Esperar 100 milisegundos antes de volver a verificar
 
 # Función para cambiar la dificultad del juego
 def cambiar_variable(valor):
@@ -134,6 +150,14 @@ def encontrar_jugador(matriz):
         for columna in range(len(matriz[fila])):
             if matriz[fila][columna] == 9:
                 return fila, columna
+            
+def turnoIA():
+    minimax(tablero, profundidadMaxima)
+    return 0
+
+def turnoPlayer():
+    draw_map(canvas, matrizInicial)
+    return 0
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -146,10 +170,10 @@ ventana.configure(bg="white")
 contenedor_puntajes = tk.Frame(ventana)
 contenedor_puntajes.pack(side='top', padx=5, pady=5)
 # Boton "Cargar Nuevo Mapa"
-btn_cargar_mapa = tk.Button(contenedor_puntajes, text='Puntos', command=cargar_mapa, bg="blue")
+btn_cargar_mapa = tk.Button(contenedor_puntajes, text='Puntos', bg="blue")
 btn_cargar_mapa.pack(side='left', padx=(0, 200))
 # Crear el botón "Cerrar"
-btn_cerrar = tk.Button(contenedor_puntajes, text="Puntos", command=cerrar_programa, bg="red")
+btn_cerrar = tk.Button(contenedor_puntajes, text="Puntos", bg="red")
 btn_cerrar.pack(side="left", padx=(200, 0))
 
 
@@ -235,6 +259,7 @@ with open('Mapa.txt', 'w') as file:
      
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
+tablero = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
 fila, columna = encontrar_jugador(matrizInicial)
 
@@ -243,7 +268,9 @@ draw_map(canvas, matrizInicial)
 for i in range(len(images)-1):
     images.pop(i)
 
-
+while(casillasTomadas<7):
+    turnoIA()
+    turnoPlayer()
 
 # Mostrar la ventana
 print("finalizado")
