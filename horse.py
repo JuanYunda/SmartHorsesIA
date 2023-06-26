@@ -8,7 +8,7 @@ import numpy as np
 
 class Horse:
 
-    def __init__(self,posXIA,posYIA, posXJUG, posYJUG, puntosJUG, puntosIA, mapaActual, padre, profundidad,tipo,MINMAX):
+    def __init__(self,posXIA,posYIA, posXJUG, posYJUG, puntosJUG, puntosIA, mapaActual, padre, hijo, profundidad,tipo,MINMAX):
         self.posicionXIA = posXIA
         self.posicionYIA = posYIA
         self.posicionXJugador = posXJUG
@@ -17,6 +17,7 @@ class Horse:
         self.puntosJUG = puntosJUG
         self.mapa = mapaActual
         self.padre = padre
+        self.hijo = hijo
         self.heuristicaIA = 0
         self.heuristicaJUG
         self.hx = 0
@@ -268,14 +269,20 @@ class Horse:
         if self.utilidad != 0: 
             self.utilidad = self.puntosJUG - self.puntosIA
 
-    def setUtilidadManual(self, cantidad):
+    def setUtilidadManual(self, cantidad, hijo):
         self.utilidad = cantidad
+        self.hijo = hijo
+
 
     def setProfundidad(self):
         self.profundidad = 0
     
     def setTipo(self, tipo):
         self.tipo = tipo
+    
+    def setInicio(self):
+        self.tipo = "IA"
+        self.minimax = "MAX"
 
 
    

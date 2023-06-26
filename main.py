@@ -89,8 +89,6 @@ def cerrar_programa():
 def cambiar_variable(valor):
     global dificultad
     global profundidadMaxima
-    global minimo
-    global maximo 
     dificultad = valor
     if dificultad == 1:
         profundidadMaxima = 3
@@ -98,7 +96,6 @@ def cambiar_variable(valor):
         profundidadMaxima = 5
     elif dificultad == 3:
         profundidadMaxima = 7
-    maximo, minimo = 1000, -1000
 
 # Función que muestra la interfaz flotante para seleccionar la dificultad
 def mostrar_interfaz():
