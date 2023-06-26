@@ -14,15 +14,33 @@ from horse import Horse
 from tkinter import Button
 import random
 
+import minimax
+
 
 botones = None
 flag = True
-global tipo_busqueda
+global fila, columna
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
-    print(f"Button clicked at row={row}, col={col}")
-    # Realizar alguna acción adicional aquí según tus necesidades
+    possible_moves = [
+        (fila + 2, columna + 1),
+        (fila + 2, columna - 1),
+        (fila - 2, columna + 1),
+        (fila - 2, columna - 1),
+        (fila + 1, columna + 2),
+        (fila + 1, columna - 2),
+        (fila - 1, columna + 2),
+        (fila - 1, columna - 2)
+    ]
+
+    for move in possible_moves:
+        if row == move[0] and col == move[1]:
+            print("posicion admitida")
+            return None
+
+    print("posicion no admitida")
+    return None
 
 # Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
@@ -110,16 +128,12 @@ def mostrar_interfaz():
         cambiar_variable(2)
     elif respuesta == "Experto":
         cambiar_variable(3)
-
-def minimax(profundidad, nodoIndice,maximizarJugador,valores,alfa,beta):
-    if profundidad == profundidadMaxima:
-        return valores[nodoIndice]
     
-    if maximizarJugador:
-        mejor = minimo
-        for i in range(0,8):
-            valores = minimax(profundidad + 1, nodoIndice * 2 + i,)
-    
+def encontrar_jugador(matriz):
+    for fila in range(len(matriz)):
+        for columna in range(len(matriz[fila])):
+            if matriz[fila][columna] == 9:
+                return fila, columna
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -222,10 +236,14 @@ with open('Mapa.txt', 'w') as file:
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
+fila, columna = encontrar_jugador(matrizInicial)
+
 draw_map(canvas, matrizInicial)
 
 for i in range(len(images)-1):
     images.pop(i)
+
+
 
 # Mostrar la ventana
 print("finalizado")
