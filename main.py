@@ -14,7 +14,7 @@ from horse import Horse
 from tkinter import Button
 import random
 
-import minimax
+from minimax import minimax
 
 
 botones = None
@@ -25,18 +25,24 @@ buttons = []
 casillasTomadas = 0
 waiting_for_click = False
 
+global puntajeP
+puntajeP = 0
+global puntajeIA
+puntajeIA = 0
+global tablero
+
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
     global waiting_for_click 
     possible_moves = [
-        (fila + 2, columna + 1),
-        (fila + 2, columna - 1),
-        (fila - 2, columna + 1),
-        (fila - 2, columna - 1),
-        (fila + 1, columna + 2),
-        (fila + 1, columna - 2),
-        (fila - 1, columna + 2),
-        (fila - 1, columna - 2)
+        (xP + 2, yP + 1),
+        (xP + 2, yP - 1),
+        (xP - 2, yP + 1),
+        (xP - 2, yP - 1),
+        (xP + 1, yP + 2),
+        (xP + 1, yP - 2),
+        (xP - 1, yP + 2),
+        (xP - 1, yP - 2)
     ]
 
     for move in possible_moves:
@@ -97,14 +103,14 @@ def draw_map(canvas, map_data):
             buttons[row_idx].append(button)
     
     possible_moves = [
-        (fila + 2, columna + 1),
-        (fila + 2, columna - 1),
-        (fila - 2, columna + 1),
-        (fila - 2, columna - 1),
-        (fila + 1, columna + 2),
-        (fila + 1, columna - 2),
-        (fila - 1, columna + 2),
-        (fila - 1, columna - 2)
+        (xP + 2, yP + 1),
+        (xP + 2, yP - 1),
+        (xP - 2, yP + 1),
+        (xP - 2, yP - 1),
+        (xP + 1, yP + 2),
+        (xP + 1, yP - 2),
+        (xP - 1, yP + 2),
+        (xP - 1, yP - 2)
     ]
     for row_idx in range(filas):
         for col_idx in range(colum):
@@ -148,13 +154,25 @@ def encontrar_jugador(matriz):
             if matriz[fila][columna] == 9:
                 return fila, columna
             
+def encontrar_ia(matriz):
+    for fila in range(len(matriz)):
+        for columna in range(len(matriz[fila])):
+            if matriz[fila][columna] == 8:
+                return fila, columna
+            
 def turnoIA():
-    minimax(tablero, profundidadMaxima)
-    return 0
+    global tablero
+    global nodoCaballo
+    solucion, utilidad, tiempo, nodoCaballo = minimax(tablero, profundidadMaxima, nodoCaballo)
+    puntajeIA = nodoCaballo.getPuntosIA()
+    puntajeP = nodoCaballo.getPuntosJUG()
+    tablero = solucion
+    canvas.update()
 
 def turnoPlayer():
-    draw_map(canvas, matrizInicial)
-    return 0
+    draw_map(canvas, tablero)
+
+    canvas.update()
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -167,11 +185,11 @@ ventana.configure(bg="white")
 contenedor_puntajes = tk.Frame(ventana)
 contenedor_puntajes.pack(side='top', padx=5, pady=5)
 # Boton "Cargar Nuevo Mapa"
-btn_cargar_mapa = tk.Button(contenedor_puntajes, text='Puntos', bg="blue")
-btn_cargar_mapa.pack(side='left', padx=(0, 200))
+btn_puntajeP = tk.Button(contenedor_puntajes, text=puntajeP, bg="blue")
+btn_puntajeP.pack(side='left', padx=(0, 200))
 # Crear el botón "Cerrar"
-btn_cerrar = tk.Button(contenedor_puntajes, text="Puntos", bg="red")
-btn_cerrar.pack(side="left", padx=(200, 0))
+btn_puntajeIA = tk.Button(contenedor_puntajes, text=puntajeIA, bg="red")
+btn_puntajeIA.pack(side="left", padx=(200, 0))
 
 
 # Crear el canvas para dibujar el mapa
@@ -258,7 +276,12 @@ mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
 tablero = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
-fila, columna = encontrar_jugador(matrizInicial)
+global nodoCaballo
+
+xP, yP = encontrar_jugador(matrizInicial)
+xIA, yIA = encontrar_ia(matrizInicial)
+
+nodoCaballo = Horse(xIA, yIA, xP, yP, 0, 0, tablero, None, None, 0, 'IA', 'MAX')
 
 draw_map(canvas, matrizInicial)
 
@@ -268,6 +291,7 @@ for i in range(len(images)-1):
 while(casillasTomadas<7):
     turnoIA()
     turnoPlayer()
+    ventana.mainloop()
 
 # Mostrar la ventana
 print("finalizado")

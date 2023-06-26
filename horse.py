@@ -19,7 +19,7 @@ class Horse:
         self.padre = padre
         self.hijo = hijo
         self.heuristicaIA = 0
-        self.heuristicaJUG
+        self.heuristicaJUG = 0
         self.hx = 0
         self.hy = 0
         self.profundidad = profundidad
@@ -263,7 +263,8 @@ class Horse:
             hx = punto1X 
             hy = punto1Y
 
-        self.heuristica = np.sqrt((hx - self.posicionX)**2 + (hy - self.posicionY) ** 2)
+        self.heuristicaIA = np.sqrt((self.hx - self.posicionXIA)**2 + (self.hy - self.posicionYIA) ** 2)
+        self.heuristicaJUG = np.sqrt((self.hx - self.posicionXJugador)**2 + (self.hy - self.posicionYJugador) ** 2)
 
     def setUtilidad (self):
         if self.utilidad != 0: 

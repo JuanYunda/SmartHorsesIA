@@ -57,7 +57,7 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
 
-            if(nodo.getPosXIA() + 1 < len(mapa[0]) and nodo.getPosYIA() - 2 >= 0):
+            if(nodo.getPosXIA() + 1 < len(nodo.getMapa()[0]) and nodo.getPosYIA() - 2 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -222,7 +222,7 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
 
     #solucion.append(mapa)
 
-    return solucion, utilidad, fin-inicio
+    return solucion, utilidad, fin-inicio, resultado.getHijo()
 
     
 
