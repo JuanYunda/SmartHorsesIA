@@ -33,7 +33,7 @@ global tablero
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
-    global waiting_for_click 
+    global waiting_for_click, xIA, yIA, tablero
     possible_moves = [
         (xP + 2, yP + 1),
         (xP + 2, yP - 1),
@@ -46,9 +46,12 @@ def button_clicked(row, col):
     ]
 
     for move in possible_moves:
-        if row == move[0] and col == move[1]:
+        if (row == move[0] and col == move[1]) and (row != xIA and col != yIA):
+            if tablero[row][col] != 0:
+                casillasTomadas+=1
             print("posicion admitida")
             waiting_for_click = False
+            intercambiar(row, col)
             return None
 
     print("posicion no admitida")
@@ -163,16 +166,25 @@ def encontrar_ia(matriz):
 def turnoIA():
     global tablero
     global nodoCaballo
+    global xIA, yIA, puntajeIA, puntajeP
     solucion, utilidad, tiempo, nodoCaballo = minimax(tablero, profundidadMaxima, nodoCaballo)
     puntajeIA = nodoCaballo.getPuntosIA()
     puntajeP = nodoCaballo.getPuntosJUG()
     tablero = solucion
+    xIA, yIA = encontrar_ia(tablero)
     canvas.update()
 
 def turnoPlayer():
+    global tablero, xP, yP
     draw_map(canvas, tablero)
-
     canvas.update()
+
+def intercambiar(xB, yB):
+    global xP, yP, tablero
+    tablero[xP][yP] = 0
+    tablero[xB][yB] = 9
+    xP, yP = xB, yB
+
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -274,7 +286,6 @@ with open('Mapa.txt', 'w') as file:
      
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
-tablero = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
 global nodoCaballo
 
@@ -282,8 +293,6 @@ xP, yP = encontrar_jugador(matrizInicial)
 xIA, yIA = encontrar_ia(matrizInicial)
 
 nodoCaballo = Horse(xIA, yIA, xP, yP, 0, 0, tablero, None, None, 0, 'IA', 'MAX')
-
-draw_map(canvas, matrizInicial)
 
 for i in range(len(images)-1):
     images.pop(i)
