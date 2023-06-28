@@ -13,7 +13,6 @@ import numpy as np
 from horse import Horse
 from tkinter import Button
 import random
-
 from minimax import minimax
 
 
@@ -30,6 +29,7 @@ puntajeP = 0
 global puntajeIA
 puntajeIA = 0
 global tablero
+tablero = []
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
@@ -268,6 +268,7 @@ solucion = []
 mostrar_interfaz()
 
 with open('Mapa.txt', 'w') as file:
+    
     numbers = list(range(10))
     numbers.remove(0)  # Eliminar el número 0 de la lista de números disponibles
     map_data = [[0] * 8 for _ in range(8)]  # Inicializar el mapa con ceros
@@ -287,7 +288,8 @@ with open('Mapa.txt', 'w') as file:
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
 
-global nodoCaballo
+global nodoCaballo 
+
 
 xP, yP = encontrar_jugador(matrizInicial)
 xIA, yIA = encontrar_ia(matrizInicial)

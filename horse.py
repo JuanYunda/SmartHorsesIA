@@ -268,7 +268,7 @@ class Horse:
 
     def setUtilidad (self):
         if self.utilidad != 0: 
-            self.utilidad = self.puntosJUG - self.puntosIA
+            self.utilidad = (self.puntosIA + self.heuristicaIA/2) - self.puntosJUG 
 
     def setUtilidadManual(self, cantidad, hijo):
         self.utilidad = cantidad
