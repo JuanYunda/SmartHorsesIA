@@ -279,8 +279,9 @@ class Horse:
     def setProfundidad(self):
         self.profundidad = 0
     
-    def setTipo(self, tipo):
+    def setTipo(self, tipo, minimax):
         self.tipo = tipo
+        self.minimax = minimax
     
     def setInicio(self):
         self.tipo = "IA"
