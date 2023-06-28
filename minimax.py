@@ -32,11 +32,13 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     nodo.setHeuristica()
     colaDeNodos = deque()
     colaMinimax = deque()
+    colaDeNodos.append(nodo)
+    colaMinimax.append(nodo)
 
     #Obtengo todos los nodos posibles
     while (True):
         profundidad = nodo.getProfundidad()
-        if profundidad > profundidadMaxima:
+        if profundidad >= profundidadMaxima:
             break
 
         if nodo.getMinMax() == "MAX":
@@ -187,50 +189,49 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
         
-        colaMinimax = sorted(colaDeNodos, key = Horse.getProfundidad)
+
         nodo = colaDeNodos.popleft()
 
-    
-    colaMinimaxCopia = deque(colaMinimax)
-    colaRecorrida = deque()
-    nodo = colaMinimaxCopia.popleft()
+    colaDeNodos = sorted(colaMinimax, key = Horse.getProfundidad)
+    colaMinimaxCopia = deque(colaDeNodos)
+    nodo = colaMinimaxCopia.pop()
 
     #Asigno utilidad a todos los nodos de la mayor profundidad una utilidad
     profundidad = nodo.getProfundidad()
+    print(profundidad)
+
     while (True):
         if profundidad != profundidadMaxima:
             break
         else:
-            print("utilidad asignada")
             nodo.setUtilidad()
-            nodo = colaMinimaxCopia.popleft()
+            nodo = colaMinimaxCopia.pop()
             profundidad = nodo.getProfundidad()
     
-    colaMinimaxCopia = deque(colaMinimax)
-    nodo = colaMinimaxCopia.popleft()
+    colaMinimaxCopia = deque(colaDeNodos)
+    nodo = colaMinimaxCopia.pop()
 
     #Aplico Minimax para asignar utilidad a todos los nodos
     while (True):
+        nodoPadre = nodo.getPadre()
         resultado = nodo
         profundidad = nodo.getProfundidad()
-        if profundidad == 0 or len(colaMinimaxCopia) == 0:
+        if profundidad == 0 or len(colaMinimaxCopia) == 0 or nodoPadre == None:
             break 
         
-        if nodo.getPadre().getTipo() == "MAX":
-            print("se modifico MAX")
-            if nodo.getPadre().getUtilidad() == 0:
-                nodo.getPadre().setUtilidadManual(nodo.getUtilidad(), nodo)
-            elif nodo.getUtilidad() > nodo.getPadre().getUtilidad():
-                nodo.getPadre().setUtilidadManual(nodo.getUtilidad(), nodo)
+        if nodoPadre.getMinMax() == "MAX":
+            if nodoPadre.getUtilidad() == 0:
+                nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
+            elif nodo.getUtilidad() > nodoPadre.getUtilidad():
+                nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
 
-        if nodo.getPadre().getTipo() == "MIN":
-            print("se modifico MIN")
-            if nodo.getPadre().getUtilidad() == 0:
-                nodo.getPadre().setUtilidadManual(nodo.getUtilidad(), nodo)
-            elif nodo.getUtilidad() < nodo.getPadre().getUtilidad():
-                nodo.getPadre().setUtilidadManual(nodo.getUtilidad(), nodo)
+        if nodoPadre.getMinMax() == "MIN":
+            if nodoPadre.getUtilidad() == 0:
+                nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
+            elif nodo.getUtilidad() < nodoPadre.getUtilidad():
+                nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             
-        nodo = colaMinimaxCopia.popleft()
+        nodo = colaMinimaxCopia.pop()
     
     solucion = []
     utilidad = resultado.getUtilidad()
