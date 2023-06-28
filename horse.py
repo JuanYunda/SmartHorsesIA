@@ -31,7 +31,6 @@ class Horse:
 
     def movimiento1(self):
         if(self.tipo == "Jugador"):
-            print(self.posicionYJugador)
             if(self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2] != 8 and self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2] != 9):
                 self.puntosJUG += self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2]
                 self.mapa[self.posicionYJugador][self.posicionXJugador] = 0
