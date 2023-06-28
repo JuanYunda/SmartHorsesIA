@@ -8,7 +8,7 @@ import numpy as np
 
 class Horse:
 
-    def __init__(self,posXIA,posYIA, posXJUG, posYJUG, puntosJUG, puntosIA, mapaActual, padre, hijo, profundidad,tipo,MINMAX):
+    def __init__(self,posXIA,posYIA, posXJUG, posYJUG, puntosJUG, puntosIA, mapaActual, padre, hijo, profun,tipo,MINMAX):
         self.posicionXIA = posXIA
         self.posicionYIA = posYIA
         self.posicionXJugador = posXJUG
@@ -22,7 +22,7 @@ class Horse:
         self.heuristicaJUG = 0
         self.hx = 0
         self.hy = 0
-        self.profundidad = profundidad
+        self.profundidad = profun
         self.utilidad = 0
         self.tipo = tipo
         self.minimax = MINMAX
@@ -31,7 +31,6 @@ class Horse:
 
     def movimiento1(self):
         if(self.tipo == "Jugador"):
-            print(self.posicionYJugador)
             if(self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2] != 8 and self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2] != 9):
                 self.puntosJUG += self.mapa[self.posicionYJugador - 1][self.posicionXJugador - 2]
                 self.mapa[self.posicionYJugador][self.posicionXJugador] = 0
@@ -180,14 +179,11 @@ class Horse:
     def getPuntosJUG(self):
         return self.puntosJUG
     
-    def getProfundidad(self):
-        return self.profundidad
-    
     def getPadre(self):
         return self.padre
     
     def getHeuristica(self):
-        return self.heuristica
+        return self.heuristicaIA
     
     def getMapa(self):
         return self.mapa
@@ -195,8 +191,14 @@ class Horse:
     def getTipo(self):
         return self.tipo
     
+    def getHijo(self):
+        return self.hijo
+    
     def getMinMax(self):
         return self.minimax
+    
+    def getProfundidad(self):
+        return self.profundidad
     
     def getUtilidad(self):
         return self.utilidad
@@ -286,6 +288,9 @@ class Horse:
     def setInicio(self):
         self.tipo = "IA"
         self.minimax = "MAX"
+
+    def setHijo(self, hijo):
+        self.hijo = hijo
 
 
    
