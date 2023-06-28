@@ -18,18 +18,13 @@ from minimax import minimax
 
 botones = None
 flag = True
-global fila, columna
-global buttons
+tablero = []
 buttons = []
 casillasTomadas = 0
 waiting_for_click = False
 
-global puntajeP
 puntajeP = 0
-global puntajeIA
 puntajeIA = 0
-global tablero
-tablero = []
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
@@ -59,7 +54,23 @@ def button_clicked(row, col):
 
 # Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
-    global waiting_for_click 
+
+    print(map_data)
+
+    # Definir las imagenes para cada valor en el mapa
+    images = {
+        0: img_casilla,
+        1: img_1,
+        2: img_2,
+        3: img_3,
+        4: img_4,
+        5: img_5,
+        6: img_6,
+        7: img_7,
+        8: img_caballoIa,
+        9: img_caballoJugador,
+        10: img_casillaValida,
+    } 
     filas = len(map_data)
     colum = len(map_data[0])
     for row_idx in range(filas):
@@ -121,13 +132,6 @@ def draw_map(canvas, map_data):
                 if row_idx == move[0] and col_idx == move[1]:
                     button = buttons[row_idx][col_idx]
                     button.configure(bg='lime')
-    waiting_for_click = True
-
-    # Bucle de espera hasta que el usuario haga clic en un botón
-    while waiting_for_click:
-        canvas.update()  # Actualizar el lienzo para que los eventos se procesen
-        # Pausar la ejecución para permitir que otros eventos se procesen
-        canvas.after(100)  # Esperar 100 milisegundos antes de volver a verificar
 
 # Función para cambiar la dificultad del juego
 def cambiar_variable(valor):
@@ -170,12 +174,23 @@ def turnoIA():
     solucion, utilidad, tiempo, nodoCaballo = minimax(tablero, profundidadMaxima, nodoCaballo)
     puntajeIA = nodoCaballo.getPuntosIA()
     puntajeP = nodoCaballo.getPuntosJUG()
-    tablero = solucion
+    tablero = solucion[0]
     xIA, yIA = encontrar_ia(tablero)
+    draw_map(canvas, tablero)
     canvas.update()
 
 def turnoPlayer():
-    global tablero, xP, yP
+    global tablero, xP, yP, waiting_for_click
+    
+    waiting_for_click = True
+
+    # Bucle de espera hasta que el usuario haga clic en un botón
+    while waiting_for_click:
+        canvas.update()  # Actualizar el lienzo para que los eventos se procesen
+        # Pausar la ejecución para permitir que otros eventos se procesen
+        canvas.after(100)  # Esperar 100 milisegundos antes de volver a verificar
+        print("sigo esperando")
+
     draw_map(canvas, tablero)
     canvas.update()
 
@@ -197,10 +212,10 @@ ventana.configure(bg="white")
 contenedor_puntajes = tk.Frame(ventana)
 contenedor_puntajes.pack(side='top', padx=5, pady=5)
 # Boton "Cargar Nuevo Mapa"
-btn_puntajeP = tk.Button(contenedor_puntajes, text=puntajeP, bg="blue")
+btn_puntajeP = tk.Button(contenedor_puntajes, text=f"Tu puntaje: {puntajeP}", bg="blue")
 btn_puntajeP.pack(side='left', padx=(0, 200))
 # Crear el botón "Cerrar"
-btn_puntajeIA = tk.Button(contenedor_puntajes, text=puntajeIA, bg="red")
+btn_puntajeIA = tk.Button(contenedor_puntajes, text=f"Puntaje CPU: {puntajeIA}", bg="red")
 btn_puntajeIA.pack(side="left", padx=(200, 0))
 
 
@@ -263,8 +278,6 @@ images = {
     10: img_casillaValida,
 }
 
-solucion = []
-
 mostrar_interfaz()
 
 with open('Mapa.txt', 'w') as file:
@@ -288,8 +301,8 @@ with open('Mapa.txt', 'w') as file:
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
 tablero = matrizInicial
-global nodoCaballo 
 
+global nodoCaballo 
 
 xP, yP = encontrar_jugador(matrizInicial)
 xIA, yIA = encontrar_ia(matrizInicial)
@@ -299,10 +312,11 @@ nodoCaballo = Horse(xIA, yIA, xP, yP, 0, 0, tablero, None, None, 0, 'IA', 'MAX')
 for i in range(len(images)-1):
     images.pop(i)
 
+draw_map(canvas, matrizInicial)
+
 while(casillasTomadas<7):
     turnoIA()
     turnoPlayer()
-    ventana.mainloop()
 
 # Mostrar la ventana
 print("finalizado")
