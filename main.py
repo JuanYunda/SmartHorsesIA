@@ -287,7 +287,6 @@ with open('Mapa.txt', 'w') as file:
      
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
-tablero = matrizInicial
 
 global nodoCaballo 
 
