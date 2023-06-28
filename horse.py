@@ -23,6 +23,7 @@ class Horse:
         self.hx = 0
         self.hy = 0
         self.profundidad = profun
+        self.profundidadMinimax = profun
         self.utilidad = 0
         self.tipo = tipo
         self.minimax = MINMAX
@@ -198,7 +199,7 @@ class Horse:
         return self.minimax
     
     def getProfundidad(self):
-        return self.profundidad
+        return self.profundidadMinimax
     
     def getUtilidad(self):
         return self.utilidad
@@ -267,11 +268,9 @@ class Horse:
             hy = punto1Y
 
         self.heuristicaIA = np.sqrt((self.hx - self.posicionXIA)**2 + (self.hy - self.posicionYIA) ** 2)
-        self.heuristicaJUG = np.sqrt((self.hx - self.posicionXJugador)**2 + (self.hy - self.posicionYJugador) ** 2)
 
     def setUtilidad (self):
-        if self.utilidad != 0: 
-            self.utilidad = (self.puntosIA + self.heuristicaIA/2) - self.puntosJUG 
+        self.utilidad = (self.puntosIA + self.heuristicaIA/2) - self.puntosJUG 
 
     def setUtilidadManual(self, cantidad, hijo):
         self.utilidad = cantidad
@@ -279,7 +278,7 @@ class Horse:
 
 
     def setProfundidad(self):
-        self.profundidad = 0
+        self.profundidadMinimax = 0
     
     def setTipo(self, tipo, minimax):
         self.tipo = tipo

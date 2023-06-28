@@ -30,6 +30,7 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     nodo = nodoHorse
     nodo.setInicio()
     nodo.setHeuristica()
+    nodo.setProfundidad()
     colaDeNodos = deque()
     colaMinimax = deque()
     colaDeNodos.append(nodo)
@@ -38,6 +39,7 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     #Obtengo todos los nodos posibles
     while (True):
         profundidad = nodo.getProfundidad()
+
         if profundidad >= profundidadMaxima:
             break
 
@@ -189,7 +191,6 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
         
-
         nodo = colaDeNodos.popleft()
 
     colaDeNodos = sorted(colaMinimax, key = Horse.getProfundidad)
@@ -198,18 +199,21 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
 
     #Asigno utilidad a todos los nodos de la mayor profundidad una utilidad
     profundidad = nodo.getProfundidad()
-    print(profundidad)
 
-    while (True):
-        if profundidad != profundidadMaxima:
-            break
-        else:
-            nodo.setUtilidad()
-            nodo = colaMinimaxCopia.pop()
-            profundidad = nodo.getProfundidad()
+    #while (True):
+     #   if profundidad != profundidadMaxima:
+      #      break
+       # else:
+        #    nodo.setHeuristica()
+         #   nodo.setUtilidad()
+          #  if len(colaMinimaxCopia) == 0:
+           #     break
+            #else: 
+             #   nodo = colaMinimaxCopia.pop()
+              #  profundidad = nodo.getProfundidad()
     
-    colaMinimaxCopia = deque(colaDeNodos)
-    nodo = colaMinimaxCopia.pop()
+    #colaMinimaxCopia = deque(colaDeNodos)
+    #nodo = colaMinimaxCopia.pop()
 
     #Aplico Minimax para asignar utilidad a todos los nodos
     while (True):
@@ -218,17 +222,25 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
         profundidad = nodo.getProfundidad()
         if profundidad == 0 or len(colaMinimaxCopia) == 0 or nodoPadre == None:
             break 
+
+        if profundidad == profundidadMaxima:
+            nodo.setHeuristica()
+            nodo.setUtilidad()
         
         if nodoPadre.getMinMax() == "MAX":
             if nodoPadre.getUtilidad() == 0:
+                nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             elif nodo.getUtilidad() > nodoPadre.getUtilidad():
+                nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
 
         if nodoPadre.getMinMax() == "MIN":
             if nodoPadre.getUtilidad() == 0:
+                nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             elif nodo.getUtilidad() < nodoPadre.getUtilidad():
+                nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             
         nodo = colaMinimaxCopia.pop()
@@ -242,7 +254,8 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     fin = time.time()
 
     #solucion.append(mapa)
-
+    puntos = resultado.getHijo().getPuntosIA()
+    print(puntos)
     return solucion, utilidad, fin-inicio, resultado.getHijo()
 
     
