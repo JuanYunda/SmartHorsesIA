@@ -22,13 +22,14 @@ tablero = []
 buttons = []
 casillasTomadas = 0
 waiting_for_click = False
+terminar = False
 
 puntajeP = 0
 puntajeIA = 0
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
-    global waiting_for_click, xIA, yIA, tablero
+    global waiting_for_click, xIA, yIA, tablero, casillasTomadas
     possible_moves = [
         (xP + 2, yP + 1),
         (xP + 2, yP - 1),
@@ -42,8 +43,6 @@ def button_clicked(row, col):
 
     for move in possible_moves:
         if (row == move[0] and col == move[1]) and (row != xIA and col != yIA):
-            if tablero[row][col] != 0:
-                casillasTomadas+=1
             print("posicion admitida")
             waiting_for_click = False
             intercambiar(row, col)
@@ -54,8 +53,6 @@ def button_clicked(row, col):
 
 # Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
-
-    print(map_data)
 
     # Definir las imagenes para cada valor en el mapa
     images = {
@@ -126,12 +123,10 @@ def draw_map(canvas, map_data):
         (xP - 1, yP + 2),
         (xP - 1, yP - 2)
     ]
-    for row_idx in range(filas):
-        for col_idx in range(colum):
-            for move in possible_moves:
-                if row_idx == move[0] and col_idx == move[1]:
-                    button = buttons[row_idx][col_idx]
-                    button.configure(bg='lime')
+    for move in possible_moves:
+        if move[0]<8 and move[1]<8 and move[0]>-1 and move[1]>-1:
+            button = buttons[move[0]][move[1]]
+            button.configure(bg='lime')
 
 # Función para cambiar la dificultad del juego
 def cambiar_variable(valor):
@@ -175,6 +170,7 @@ def turnoIA():
     puntajeIA = nodoCaballo.getPuntosIA()
     puntajeP = nodoCaballo.getPuntosJUG()
     tablero = solucion[0]
+    print(f"tablero devuelto desde minimax: {tablero}")
     xIA, yIA = encontrar_ia(tablero)
     draw_map(canvas, tablero)
     canvas.update()
@@ -200,6 +196,14 @@ def intercambiar(xB, yB):
     tablero[xB][yB] = 9
     xP, yP = xB, yB
 
+def verificarMapa():
+    global tablero, terminar
+    filas = len(tablero)
+    colum = len(tablero[0])
+    for row_idx in range(filas):
+        for col_idx in range(colum):
+            if tablero[row_idx][col_idx] != 0 and tablero[row_idx][col_idx] != 8 and tablero[row_idx][col_idx] != 9:
+                terminar = True
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -300,6 +304,7 @@ with open('Mapa.txt', 'w') as file:
      
 mapa = open('Mapa.txt', 'r')
 matrizInicial = np.loadtxt(mapa, dtype='i', delimiter=' ')
+print(f"matriz inicial: {matrizInicial}")
 tablero = matrizInicial
 
 global nodoCaballo 
@@ -314,9 +319,13 @@ for i in range(len(images)-1):
 
 draw_map(canvas, matrizInicial)
 
-while(casillasTomadas<7):
+while(not terminar):
     turnoIA()
+    verificarMapa()
+    if not terminar:
+        break
     turnoPlayer()
+    verificarMapa()
 
 # Mostrar la ventana
 print("finalizado")
