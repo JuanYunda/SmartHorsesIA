@@ -29,7 +29,7 @@ puntajeIA = 0
 
 # Funciones para dibujar el mapa en la ventana
 def button_clicked(row, col):
-    global waiting_for_click, xIA, yIA, tablero, casillasTomadas
+    global waiting_for_click, xIA, yIA, tablero, casillasTomadas, xP, yP
     possible_moves = [
         (xP + 2, yP + 1),
         (xP + 2, yP - 1),
@@ -41,11 +41,12 @@ def button_clicked(row, col):
         (xP - 1, yP - 2)
     ]
 
+    print(possible_moves)
     for move in possible_moves:
-        if (row == move[0] and col == move[1]) and (row != xIA and col != yIA):
+        if (col == move[0] and row == move[1]) and (col != xIA and row != yIA):
             print("posicion admitida")
             waiting_for_click = False
-            intercambiar(row, col)
+            intercambiar(col,row)
             return None
 
     print("posicion no admitida")
@@ -53,7 +54,7 @@ def button_clicked(row, col):
 
 # Luego, puedes usar la función "button_clicked" en la función "draw_map"
 def draw_map(canvas, map_data):
-
+    global xP,yP
     # Definir las imagenes para cada valor en el mapa
     images = {
         0: img_casilla,
@@ -124,7 +125,7 @@ def draw_map(canvas, map_data):
         (xP - 1, yP - 2)
     ]
     for move in possible_moves:
-        if move[0]<8 and move[1]<8 and move[0]>-1 and move[1]>-1:
+        if -1 < move[0] < 8 and -1 < move[1] < 8:
             button = buttons[move[0]][move[1]]
             button.configure(bg='lime')
 
@@ -154,23 +155,26 @@ def encontrar_jugador(matriz):
     for fila in range(len(matriz)):
         for columna in range(len(matriz[fila])):
             if matriz[fila][columna] == 9:
-                return fila, columna
+                return columna, fila
             
 def encontrar_ia(matriz):
     for fila in range(len(matriz)):
         for columna in range(len(matriz[fila])):
             if matriz[fila][columna] == 8:
-                return fila, columna
+                return columna, fila
             
 def turnoIA():
     global tablero
     global nodoCaballo
     global xIA, yIA, puntajeIA, puntajeP
+    nodoCaballo.setMapa(tablero)
+    nodoCaballo.setPuntosJUG(puntajeP)
     solucion, utilidad, tiempo, nodoCaballo = minimax(tablero, profundidadMaxima, nodoCaballo)
     puntajeIA = nodoCaballo.getPuntosIA()
     puntajeP = nodoCaballo.getPuntosJUG()
     tablero = solucion[0]
-    print(f"tablero devuelto desde minimax: {tablero}")
+    print("tablero devuelto desde minimax:")
+    print(tablero)
     xIA, yIA = encontrar_ia(tablero)
     draw_map(canvas, tablero)
     canvas.update()
@@ -191,19 +195,25 @@ def turnoPlayer():
     canvas.update()
 
 def intercambiar(xB, yB):
-    global xP, yP, tablero
-    tablero[xP][yP] = 0
-    tablero[xB][yB] = 9
+    global xP, yP, tablero, puntajeP
+    puntajeP += tablero[yB][xB]
+    tablero[yP][xP] = 0
+    tablero[yB][xB] = 9
     xP, yP = xB, yB
 
 def verificarMapa():
     global tablero, terminar
     filas = len(tablero)
     colum = len(tablero[0])
+    
+    terminar = True
     for row_idx in range(filas):
         for col_idx in range(colum):
-            if tablero[row_idx][col_idx] != 0 and tablero[row_idx][col_idx] != 8 and tablero[row_idx][col_idx] != 9:
-                terminar = True
+            if tablero[row_idx][col_idx] > 0 and tablero[row_idx][col_idx] < 8:
+                terminar = False
+                break
+                
+    
 
 # Crear la ventana
 ventana = tk.Tk()
@@ -309,6 +319,7 @@ tablero = matrizInicial
 
 global nodoCaballo 
 
+global xP, yP, xIA, yIA
 xP, yP = encontrar_jugador(matrizInicial)
 xIA, yIA = encontrar_ia(matrizInicial)
 
@@ -319,13 +330,19 @@ for i in range(len(images)-1):
 
 draw_map(canvas, matrizInicial)
 
-while(not terminar):
+while(True):
     turnoIA()
     verificarMapa()
-    if not terminar:
+    btn_puntajeP.config(text=f"Tu puntaje: {puntajeP}")
+    btn_puntajeIA.config(text=f"Puntaje CPU: {puntajeIA}")
+    if terminar == True:
         break
     turnoPlayer()
     verificarMapa()
+    if terminar == True:
+        break
+    print("Tablero obtenido de jugador")
+    print(tablero)
 
 # Mostrar la ventana
 print("finalizado")

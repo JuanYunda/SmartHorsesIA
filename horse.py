@@ -159,6 +159,7 @@ class Horse:
                 self.mapa[self.posicionYIA + 1][self.posicionXIA - 2]= 8
                 self.posicionYIA = self.posicionYIA+1
                 self.posicionXIA = self.posicionXIA-2
+    
 
     #Funciones Get
 
@@ -270,7 +271,7 @@ class Horse:
         self.heuristicaIA = np.sqrt((self.hx - self.posicionXIA)**2 + (self.hy - self.posicionYIA) ** 2)
 
     def setUtilidad (self):
-        self.utilidad = (self.puntosIA + self.heuristicaIA/2) - self.puntosJUG 
+        self.utilidad = (self.puntosIA + self.heuristicaIA/3) - self.puntosJUG 
 
     def setUtilidadManual(self, cantidad, hijo):
         self.utilidad = cantidad
@@ -287,9 +288,16 @@ class Horse:
     def setInicio(self):
         self.tipo = "IA"
         self.minimax = "MAX"
+        self.utilidad = 0
 
     def setHijo(self, hijo):
         self.hijo = hijo
+    
+    def setMapa(self, mapa):
+        self.mapa = mapa
+
+    def setPuntosJUG(self, puntaje):
+        self.puntosJUG = puntaje
 
 
    

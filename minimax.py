@@ -13,20 +13,7 @@ import time
 
 def minimax(mapa,profundidadMaxima,nodoHorse):
     profundidad = 0
-    horse1X, horse1Y = 0, 0
-    horse2X, horse2Y = 0, 0
-
     inicio = time.time()
-
-    for i in range(len(mapa)):
-        for j in range(len(mapa[i])):
-            if mapa[i][j] == 8:
-                horse1Y = i
-                horse1X = j
-            if mapa[i][j] == 9:
-                horse2Y = i
-                horse2X = j
-
     nodo = nodoHorse
     nodo.setInicio()
     nodo.setHeuristica()
@@ -35,7 +22,8 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
     colaMinimax = deque()
     colaDeNodos.append(nodo)
     colaMinimax.append(nodo)
-
+    columnas = len(mapa[0])
+    filas = len(mapa)
     #Obtengo todos los nodos posibles
     while (True):
         profundidad = nodo.getProfundidad()
@@ -53,69 +41,77 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
             if(nodo.getPosXIA() - 1 >= 0 and nodo.getPosYIA() - 2 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento2()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXIA() + 1 < len(mapa[0]) and nodo.getPosYIA() - 2 >= 0):
+            if(nodo.getPosXIA() + 1 < columnas and nodo.getPosYIA() - 2 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento3()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXIA() + 2 < len(mapa[0]) and nodo.getPosYIA() - 1 >= 0):
+            if(nodo.getPosXIA() + 2 < columnas and nodo.getPosYIA() - 1 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento4()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXIA() + 2 < len(mapa[0]) and nodo.getPosYIA() + 1 < len(mapa)):
+            if(nodo.getPosXIA() + 2 < columnas and nodo.getPosYIA() + 1 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento5()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXIA() + 1 < len(mapa[0]) and nodo.getPosYIA() + 2 < len(mapa)):
+            if(nodo.getPosXIA() + 1 < columnas and nodo.getPosYIA() + 2 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento6()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
             
-            if(nodo.getPosXIA() - 1 >= 0 and nodo.getPosYIA() + 2 < len(mapa)):
+            if(nodo.getPosXIA() - 1 >= 0 and nodo.getPosYIA() + 2 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento7()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
             
-            if(nodo.getPosXIA() - 2 >= 0 and nodo.getPosYIA() + 1 < len(mapa)):
+            if(nodo.getPosXIA() - 2 >= 0 and nodo.getPosYIA() + 1 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
-                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
+                nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(), nodo.getPuntosJUG(), nodo.getPuntosIA(), copiaMapa,nodo, None,nodo.getProfundidad()+1,"IA","MAX")
                 nuevoNodo.setHeuristica()
                 nuevoNodo.movimiento8()
                 nuevoNodo.setTipo("Jugador", "MIN")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
             
         if nodo.getMinMax() == "MIN":
 
@@ -127,6 +123,7 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
             if(nodo.getPosXJUG() - 1 >= 0 and nodo.getPosYJUG() - 2 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
@@ -136,8 +133,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXJUG() + 1 < len(mapa[0]) and nodo.getPosYJUG() - 2 >= 0):
+            if(nodo.getPosXJUG() + 1 < columnas and nodo.getPosYJUG() - 2 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -145,8 +143,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXJUG() + 2 < len(mapa[0]) and nodo.getPosYJUG() - 1 >= 0):
+            if(nodo.getPosXJUG() + 2 < columnas and nodo.getPosYJUG() - 1 >= 0):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -154,8 +153,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXJUG() + 2 < len(mapa[0]) and nodo.getPosYJUG() + 1 < len(mapa)):
+            if(nodo.getPosXJUG() + 2 < columnas and nodo.getPosYJUG() + 1 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -163,8 +163,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
 
-            if(nodo.getPosXJUG() + 1 < len(mapa[0]) and nodo.getPosYJUG() + 2 < len(mapa)):
+            if(nodo.getPosXJUG() + 1 < columnas and nodo.getPosYJUG() + 2 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -172,8 +173,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
             
-            if(nodo.getPosXJUG() - 1 >= 0 and nodo.getPosYJUG() + 2 < len(mapa)):
+            if(nodo.getPosXJUG() - 1 >= 0 and nodo.getPosYJUG() + 2 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -181,8 +183,9 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
             
-            if(nodo.getPosXJUG() - 2 >= 0 and nodo.getPosYJUG() + 1 < len(mapa)):
+            if(nodo.getPosXJUG() - 2 >= 0 and nodo.getPosYJUG() + 1 < filas):
                 copiaMapa = copy.deepcopy(nodo.getMapa())
                 nuevoNodo = Horse(nodo.getPosXIA(),nodo.getPosYIA(),nodo.getPosXJUG(),nodo.getPosYJUG(),nodo.getPuntosJUG(), nodo.getPuntosIA(),copiaMapa,nodo, None,nodo.getProfundidad()+1,"Jugador","MIN")
                 nuevoNodo.setHeuristica()
@@ -190,45 +193,29 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nuevoNodo.setTipo("IA", "MAX")
                 colaDeNodos.append(nuevoNodo)
                 colaMinimax.append(nuevoNodo)
+                copiaMapa = []
         
         nodo = colaDeNodos.popleft()
 
     colaDeNodos = sorted(colaMinimax, key = Horse.getProfundidad)
     colaMinimaxCopia = deque(colaDeNodos)
-    nodo = colaMinimaxCopia.pop()
-
-    #Asigno utilidad a todos los nodos de la mayor profundidad una utilidad
     profundidad = nodo.getProfundidad()
-
-    #while (True):
-     #   if profundidad != profundidadMaxima:
-      #      break
-       # else:
-        #    nodo.setHeuristica()
-         #   nodo.setUtilidad()
-          #  if len(colaMinimaxCopia) == 0:
-           #     break
-            #else: 
-             #   nodo = colaMinimaxCopia.pop()
-              #  profundidad = nodo.getProfundidad()
-    
-    #colaMinimaxCopia = deque(colaDeNodos)
-    #nodo = colaMinimaxCopia.pop()
+    nodo = colaMinimaxCopia.pop()
 
     #Aplico Minimax para asignar utilidad a todos los nodos
     while (True):
         nodoPadre = nodo.getPadre()
         resultado = nodo
         profundidad = nodo.getProfundidad()
-        if profundidad == 0 or len(colaMinimaxCopia) == 0 or nodoPadre == None:
+        if profundidad == 0:
             break 
 
-        if profundidad == profundidadMaxima:
+        if profundidad == profundidadMaxima or nodo.getHijo() == None:
             nodo.setHeuristica()
             nodo.setUtilidad()
         
         if nodoPadre.getMinMax() == "MAX":
-            if nodoPadre.getUtilidad() == 0:
+            if nodoPadre.getUtilidad() == 0 or nodoPadre.getHijo() == None:
                 nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             elif nodo.getUtilidad() > nodoPadre.getUtilidad():
@@ -236,26 +223,25 @@ def minimax(mapa,profundidadMaxima,nodoHorse):
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
 
         if nodoPadre.getMinMax() == "MIN":
-            if nodoPadre.getUtilidad() == 0:
+            if nodoPadre.getUtilidad() == 0 or nodoPadre.getHijo() == None:
                 nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
             elif nodo.getUtilidad() < nodoPadre.getUtilidad():
                 nodoPadre.setHeuristica()
                 nodoPadre.setUtilidadManual(nodo.getUtilidad(), nodo)
-            
+        
+        if len(colaMinimaxCopia) == 0:
+            break
         nodo = colaMinimaxCopia.pop()
     
     solucion = []
     utilidad = resultado.getUtilidad()
-    solucion.append(resultado.getHijo().getMapa())
-    #while resultado.getHijo() != None:
-     #   solucion.append(resultado.getMapa())
-      #  resultado = resultado.getHijo()
+    if resultado.getHijo().getProfundidad() >= 2:
+        solucion.append(resultado.getMapa())
+    else:
+        solucion.append(resultado.getHijo().getMapa())
     fin = time.time()
-
-    #solucion.append(mapa)
-    puntos = resultado.getHijo().getPuntosIA()
-    print(puntos)
+    print(resultado.getHijo().getPuntosJUG())
     return solucion, utilidad, fin-inicio, resultado.getHijo()
 
     
